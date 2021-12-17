@@ -5,27 +5,18 @@ class EmployeesListItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      increase: false,
-      like: false,
+      salary: '',
     };
   }
 
-  onIncrease = () => {
-    this.setState(({ increase }) => ({
-      // дестркутурируем аргумент callback`a сразу доставая increase
-      increase: !increase, // записываем новое присваивание в () чтобы не прописывать return
-    }));
-  };
-
-  onRise = () => {
-    this.setState(({ like }) => ({
-      like: !like,
-    }));
+  onChangeSalary = (e) => {
+    const salaryChange = e.target.value.slice(0, -1);
+    this.setState({ salary: salaryChange });
+    this.props.onChangeSalary(this.props.name, salaryChange);
   };
 
   render() {
-    const { name, salary, onDelete } = this.props; // не изменяемые получаяемые props
-    const { increase, like } = this.state; // динамические props
+    const { name, salary, onDelete, onToggleProp, increase, like } = this.props; // не изменяемые получаяемые props
 
     let ClassName = 'list-group-item d-flex justify-content-between';
 
@@ -39,19 +30,25 @@ class EmployeesListItem extends Component {
 
     return (
       <li className={ClassName}>
-        <span className="list-group-item-label" onClick={this.onRise}>
+        <span
+          className="list-group-item-label"
+          data-toggle="like"
+          onClick={onToggleProp}
+        >
           {name}
         </span>
         <input
           type="text"
           className="list-group-item-input"
-          defaultValue={salary + '$'}
+          value={salary + '$'}
+          onChange={this.onChangeSalary}
         />
         <div className="d-flex justify-content-center align-items-center">
           <button
             type="button"
             className="btn-cookie btn-sm "
-            onClick={this.onIncrease}
+            data-toggle="increase"
+            onClick={onToggleProp}
           >
             <i className="fas fa-cookie"></i>
           </button>
